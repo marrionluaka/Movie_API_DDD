@@ -4,9 +4,37 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --exec ts-node src/app.ts",
+    "typecli": "node cmd_migrations.js",
+    "test": "mocha --reporter spec --compilers ts:ts-node/register ./src/Test/**/*.spec.ts"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Marrion Luaka",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "express": "4.16.3",
+    "inversify": "4.13.0",
+    "inversify-express-utils": "6.1.0",
+    "pg": "7.8.0",
+    "reflect-metadata": "0.1.12",
+    "typeorm": "0.2.13"
+  },
+  "devDependencies": {
+    "@types/body-parser": "1.17.0",
+    "@types/chai": "4.1.4",
+    "@types/express": "4.16.0",
+    "@types/mocha": "5.2.5",
+    "@types/node": "10.5.5",
+    "@types/pg": "7.4.11",
+    "@types/pg-promise": "5.4.3",
+    "@types/sinon": "7.0.3",
+    "chai": "4.1.2",
+    "mocha": "5.2.0",
+    "nodemon": "1.18.7",
+    "shelljs": "0.8.3",
+    "sinon": "7.2.2",
+    "ts-node": "7.0.0",
+    "typescript": "3.0.1"
+  }
 }
