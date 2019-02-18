@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/app.ts",
+    "start": "nodemon --exec ts-node Purchasing/Presentation/main.ts",
     "typecli": "node cmd_migrations.js",
     "test": "mocha --reporter spec --compilers ts:ts-node/register ./src/Test/**/*.spec.ts"
   },

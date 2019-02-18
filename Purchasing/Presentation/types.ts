@@ -1,5 +1,5 @@
-const TYPES = { 
-    // Not implemented yet...
+const TYPE = { 
+    CustomerRepo: Symbol.for("CustomerRepo"),
 };
 
-export { TYPES };
+export { TYPE };
