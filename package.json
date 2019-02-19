@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --exec ts-node Purchasing/Presentation/main.ts",
+    "start": "nodemon --exec ts-node -r tsconfig-paths/register Purchasing/Presentation/main.ts",
     "typecli": "node cmd_migrations.js",
     "test": "mocha --reporter spec --compilers ts:ts-node/register ./src/Test/**/*.spec.ts"
   },
@@ -35,6 +35,7 @@
     "shelljs": "0.8.3",
     "sinon": "7.2.2",
     "ts-node": "7.0.0",
+    "tsconfig-paths": "^3.8.0",
     "typescript": "3.0.1"
   }
 }
