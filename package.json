@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec ts-node -r tsconfig-paths/register Purchasing/Presentation/main.ts",
     "typecli": "node cmd_migrations.js",
-    "test": "mocha --reporter spec --compilers ts:ts-node/register ./src/Test/**/*.spec.ts"
+    "test": "mocha --reporter spec -r ts-node/register -r tsconfig-paths/register ./Tests/**/*.spec.ts"
   },
   "keywords": [],
   "author": "Marrion Luaka",

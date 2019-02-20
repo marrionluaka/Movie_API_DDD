@@ -2,26 +2,24 @@ import Result from '@Common/Result';
 
 export default class Dollars {
     private static readonly MaxDollarAmount: number = 1000000;
-    public readonly Value: number;
+    public readonly Amount: number;
 
     private constructor(value: number) {
-        this.Value = value;
+        this.Amount = value;
     }
 
     public get IsZero(): boolean {
-        return this.Value == 0;
+        return this.Amount == 0;
     }
 
     public static Create(dollarAmount: number): Result<Dollars> {
-        const result = new Result(new Dollars(dollarAmount), false, "");
-        
         if (dollarAmount < 0)
-            return result.Fail("Dollar amount cannot be negative");
+            return Result.Fail("Dollar amount cannot be negative");
 
         if (dollarAmount > Dollars.MaxDollarAmount)
-            return result.Fail(`Dollar amount cannot be greater than ${Dollars.MaxDollarAmount}`);
+            return Result.Fail(`Dollar amount cannot be greater than ${Dollars.MaxDollarAmount}`);
 
-        return result.Ok;
+        return Result.Ok(new Dollars(dollarAmount));
     }
 
     public static Of(dollarAmount: number): Dollars {
@@ -29,14 +27,14 @@ export default class Dollars {
     }
 
     public static Multiply(dollars: Dollars, multiplier: number): Dollars {
-        return new Dollars(dollars.Value * multiplier);
+        return new Dollars(dollars.Amount * multiplier);
     }
 
     public static Add(dollars1: Dollars, dollars2: Dollars): Dollars {
-        return new Dollars(dollars1.Value + dollars2.Value);
+        return new Dollars(dollars1.Amount + dollars2.Amount);
     }
 
     public static Equals(dollar: Dollars, other: Dollars): boolean {
-        return dollar.Value == other.Value;
+        return dollar.Amount == other.Amount;
     }
 }

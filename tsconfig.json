@@ -13,7 +13,8 @@
         "declaration": true,
         "baseUrl": ".",
         "paths": {
-            "@Common/*": ["SharedKernel/Common/*"]
+            "@Common/*": ["SharedKernel/Common/*"],
+            "@Core/*": ["Purchasing/Core/*"],
         }
     },
     "exclude": [
