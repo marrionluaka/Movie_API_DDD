@@ -25,7 +25,7 @@ describe("CustomerName specs", () => {
         });
     });
 
-    it("Equals(): checks the equality of two dollar objects.", () => {
+    it("Equals(): checks the equality of two email objects.", () => {
         const actual = CustomerName.Equals(
             CustomerName.Create("Dave").Value, 
             CustomerName.Create("Dave").Value);
