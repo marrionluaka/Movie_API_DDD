@@ -2,24 +2,25 @@ import Result from '@Common/Result';
 
 export default class ExpirationDate {
     public readonly Date: Date;
+    private static readonly INFINITY_TIMESTAMP = 8640000000000000;
 
     private constructor(date: Date){
         this.Date = date;
     }
 
-    public get Infinite() : ExpirationDate {
-        return new ExpirationDate(null)
+    public static get Infinite() : ExpirationDate {
+        return new ExpirationDate(new Date(ExpirationDate.INFINITY_TIMESTAMP));
     }
 
     public get IsExpired(): boolean {
-        return this !== this.Infinite && this.Date.getDate < Date.now;
+        return this !== ExpirationDate.Infinite && this.Date.getTime() < Date.now();
     }
 
     public static Create(date: Date): Result<ExpirationDate> {
         return Result.Ok(new ExpirationDate(date));
     }
 
-    protected Equals(other: ExpirationDate): boolean {
-        return this.Date == other.Date;
+    public Equals(other: ExpirationDate): boolean {
+        return this.Date.getTime() == other.Date.getTime();
     }
 }
