@@ -1,23 +1,28 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import PurchasedMovies from './PurchasedMovie';
+import PurchasedMoviesEntity from './Entities/PurchasedMoviesEntity';
 import ExpirationDate from './ValueObjects/ExpirationDate';
 import Dollars from './ValueObjects/Dollars';
 import CustomerStatus from './ValueObjects/CustomerStatus';
 import { AddDays } from '@Common/Utils';
+import { LicensingModel } from './Enums/LicensingModel';
 
 @Entity()
 export default abstract class Movie {
-    @PrimaryGeneratedColumn()
-    MovieId: number;
+    @PrimaryGeneratedColumn("uuid")
+    MovieId: string;
 
     @Column()
     Name: string;
 
-    @Column()
-    LicensingModel: number;
+    @Column({
+        type: "enum",
+        enum: LicensingModel,
+        default: LicensingModel.TwoDays
+    })
+    LicensingModel: LicensingModel;
 
-    @OneToMany(type => PurchasedMovies, ps => ps._PurchasedMovieId)
-    PurchasedMovies: PurchasedMovies[];
+    @OneToMany(type => PurchasedMoviesEntity, ps => ps._PurchasedMovieId)
+    PurchasedMovies: PurchasedMoviesEntity[];
 
     public CalculatePrice(status: CustomerStatus): Dollars {
         const modifier: number = 1 - status.GetDiscount;

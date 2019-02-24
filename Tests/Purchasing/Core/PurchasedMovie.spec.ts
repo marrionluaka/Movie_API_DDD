@@ -6,6 +6,8 @@ import ExpirationDate from "@Core/ValueObjects/ExpirationDate";
 import { MoveDateBackward, MoveDateForward } from "@Common/Utils";
 import { TwoDaysMovie } from "@Core/Movie";
 import Customer from "@Core/Customer";
+import CustomerName from "@Core/ValueObjects/CustomerName";
+import Email from "@Core/ValueObjects/Email";
 
 describe("PurchasedMovie specs", () => {
     let tenDollars: Dollars,
@@ -13,9 +15,7 @@ describe("PurchasedMovie specs", () => {
 
     beforeEach(() => {
         tenDollars = Dollars.Of(10);
-        const date = new Date();
-        MoveDateForward(1, date);
-        validDate = ExpirationDate.Create(date).Value;
+        validDate = ExpirationDate.Create(MoveDateForward(1)).Value;
     });
 
     context("Create():", () => {
@@ -32,10 +32,7 @@ describe("PurchasedMovie specs", () => {
             expect(() => PurchasedMovie.Create(tenDollars,null,null,null))
                 .to.throw("Invalid argument: expirationDate.");
 
-            const date = new Date();
-            MoveDateBackward(1, date);
-
-            expect(() => PurchasedMovie.Create(tenDollars, ExpirationDate.Create(date).Value, null, null))
+            expect(() => PurchasedMovie.Create(tenDollars, ExpirationDate.Create(MoveDateBackward(1)).Value, null, null))
                 .to.throw("Invalid argument: expirationDate.");
         });
 
@@ -54,10 +51,13 @@ describe("PurchasedMovie specs", () => {
                tenDollars,
                validDate,
                new TwoDaysMovie(),
-               Customer.Create("Dale")
+               Customer.Create(
+                   CustomerName.Create("Dale").Value,
+                   Email.Create("nobody@nowhere.com").Value
+                )
            );
 
-           expect(purchasedMovie.Price).to.equal(tenDollars.Amount);
+           expect(purchasedMovie.Price.Amount).to.equal(tenDollars.Amount);
         });
     });
 });

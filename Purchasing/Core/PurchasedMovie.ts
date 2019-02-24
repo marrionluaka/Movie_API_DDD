@@ -1,82 +1,12 @@
-import { 
-    Entity, 
-    Column, 
-    PrimaryGeneratedColumn,
-    ManyToOne
-} from 'typeorm';
-
 import Customer from './Customer';
 import Movie from './Movie';
 import Dollars from './ValueObjects/Dollars';
 import ExpirationDate from './ValueObjects/ExpirationDate';
+import PurchasedMoviesEntity from './Entities/PurchasedMoviesEntity';
 
-@Entity()
-export default class PurchasedMovies {
-    @PrimaryGeneratedColumn()
-    readonly _PurchasedMovieId: number;
-
-    @Column()
-    private get _Price(): number{
-        return this._price;
-    };
-    private set _Price(price: number){
-        this._price = price;
-    };
-
-    @Column()
-    private get _PurchaseDate(): Date{
-        return this._purchasedDate;
-    };
-    private set _PurchaseDate(purchasedDate: Date){
-        this._purchasedDate = purchasedDate;
-    };
-
-    @Column()
-    private get _ExpirationDate(): Date{
-        return this._expirationDate;
-    };
-    private set _ExpirationDate(expirationDate: Date){
-        this._expirationDate = expirationDate;
-    };
-
-    @ManyToOne(type => Customer, c => c.CustomerId)
-    private get _Customer(): Customer{
-        return this._customer;
-    };
-    private set _Customer(customer: Customer){
-        this._customer = customer;
-    };
-
-    @ManyToOne(type => Movie, m => m.MovieId)
-    private get _Movie(): Movie{
-        return this._movie;
-    };
-    private set _Movie(movie: Movie){
-        this._movie = movie;
-    };
-
-    private _price: number;
-    private _purchasedDate: Date;
-    private _expirationDate: Date;
-    private _customer: Customer;
-    private _movie: Movie;
-
-    private constructor(
-        price?: Dollars,
-        expirationDate?: ExpirationDate,
-        movie?: Movie,
-        customer?: Customer
-    ){
-        if(!!movie){
-            this._Movie = movie;
-            this._Customer = customer;
-            this._Price = price.Amount;
-            this._ExpirationDate = expirationDate.Date;
-            this._PurchaseDate = new Date();
-        }
-    }
-
-    public get Price(): number{
+export default class PurchasedMovies extends PurchasedMoviesEntity {
+    
+    public get Price(): Dollars{
         return this._Price;
     }
 
@@ -84,16 +14,33 @@ export default class PurchasedMovies {
         return this._PurchaseDate;
     }
 
-    public get ExpirationDate(): Date{
+    public get ExpirationDate(): ExpirationDate{
         return this._ExpirationDate;
     }
 
     public get Customer(): Customer{
-        return this._Customer;
+        return this.Customer;
     }
 
     public get Movie(): Movie{
         return this._Movie;
+    }
+    
+    private constructor(
+        price?: Dollars,
+        expirationDate?: ExpirationDate,
+        movie?: Movie,
+        customer?: Customer
+    ){
+        super();
+        
+        if(!!movie){
+            this._Movie = movie;
+            this._Customer = customer;
+            this._Price = price;
+            this._ExpirationDate = expirationDate;
+            this._PurchaseDate = new Date();
+        }
     }
 
     public static Create(

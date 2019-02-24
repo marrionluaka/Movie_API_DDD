@@ -15,6 +15,7 @@
         "paths": {
             "@Common/*": ["SharedKernel/Common/*"],
             "@Core/*": ["Purchasing/Core/*"],
+            "@Persistence/*": ["Purchasing/Persistence/*"],
         }
     },
     "exclude": [

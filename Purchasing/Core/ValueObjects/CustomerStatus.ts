@@ -24,12 +24,9 @@ export default class CustomerStatus {
     }
 
     public Promote(): CustomerStatus {
-        const date = new Date();
-        MoveDateForward(1, date);
-
         return new CustomerStatus(
             CustomerStatusType.Advanced, 
-            ExpirationDate.Create(date).Value
+            ExpirationDate.Create(MoveDateForward(1)).Value
         );
     }
 

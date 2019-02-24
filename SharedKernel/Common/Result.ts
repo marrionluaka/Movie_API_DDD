@@ -13,7 +13,7 @@ export default class Result<T> {
         return new Result(null, true, msg);
     }
 
-    public static Ok<T>(value: T): Result<T>{
+    public static Ok<T>(value?: T): Result<T>{
         return new Result(value, false, "");
     }
 }

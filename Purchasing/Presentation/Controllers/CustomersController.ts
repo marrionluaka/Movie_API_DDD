@@ -10,8 +10,7 @@ import {
 import { Repository } from 'typeorm';
 
 import { TYPE } from '../types';
-
-import { Customer } from '../../Core/Customer';
+import Customer from '@Core/Customer';
 
 @controller("/api/customer")
 export class CustomersController implements interfaces.Controller{

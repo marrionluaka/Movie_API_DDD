@@ -1,7 +1,7 @@
 import { Container, AsyncContainerModule } from 'inversify';
 import { TYPE } from './types';
 import { Repository } from 'typeorm';
-import { Customer } from '../Core/Customer';
+import Customer from '@Core/Customer';
 import { getDbConnection } from './dbConn';
 
 class Startup {
