@@ -1,5 +1,6 @@
-import Dollars from "@Core/ValueObjects/Dollars";
 import { expect } from "chai";
+
+import Dollars from "@Core/ValueObjects/Dollars";
 
 describe("Dollar specs", () => {
 

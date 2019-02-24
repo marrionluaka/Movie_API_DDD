@@ -1,13 +1,18 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PurchasedMovies } from './PurchasedMovie';
+import PurchasedMovies  from './PurchasedMovie';
 
 @Entity()
-export class Customer {
+export default class Customer {
     @PrimaryGeneratedColumn()
     CustomerId: number;
 
     @Column()
-    Name: string;
+    private get Name(): string{
+        return this.name;
+    };
+    private set Name(name: string){
+        this.name = name;
+    };
 
     @Column()
     Email: string;
@@ -21,6 +26,24 @@ export class Customer {
     @Column()
     MoneySpent: number;
 
-    @OneToMany(type => PurchasedMovies, ps => ps.PurchasedMovieId)
+    @OneToMany(type => PurchasedMovies, ps => ps._PurchasedMovieId)
     PurchasedMovies: PurchasedMovies[];
+
+    private name: string;
+
+    private constructor(name?: string){
+        if(!!name){
+            this.Name = name;
+        }
+    }
+
+    public get FullName(): string {
+        return this.Name;
+    }
+
+    public static Create(name: string): Customer{
+        if(!name) throw "The argument 'name' is required.";
+
+        return new Customer(name);
+    }
 }

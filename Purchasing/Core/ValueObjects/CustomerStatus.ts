@@ -1,10 +1,6 @@
 import ExpirationDate from './ExpirationDate';
-
-export enum CustomerStatusType
-{
-    Regular = 1,
-    Advanced = 2
-} 
+import { CustomerStatusType } from '@Core/Enums/CustomerStatusType';
+import { MoveDateForward } from '@Common/Utils';
 
 export default class CustomerStatus {
     public readonly ExpirationDate: ExpirationDate;
@@ -28,12 +24,12 @@ export default class CustomerStatus {
     }
 
     public Promote(): CustomerStatus {
-        const aYearFromNow = new Date();
-        aYearFromNow.setFullYear(aYearFromNow.getFullYear() + 1);
+        const date = new Date();
+        MoveDateForward(1, date);
 
         return new CustomerStatus(
             CustomerStatusType.Advanced, 
-            ExpirationDate.Create(aYearFromNow).Value
+            ExpirationDate.Create(date).Value
         );
     }
 

@@ -1,5 +1,7 @@
-import CustomerStatus, { CustomerStatusType } from "@Core/ValueObjects/CustomerStatus";
 import { expect } from "chai";
+
+import CustomerStatus from "@Core/ValueObjects/CustomerStatus";
+import { CustomerStatusType } from "@Core/Enums/CustomerStatusType";
 import ExpirationDate from "@Core/ValueObjects/ExpirationDate";
 
 describe("CustomerStatus specs", () => {

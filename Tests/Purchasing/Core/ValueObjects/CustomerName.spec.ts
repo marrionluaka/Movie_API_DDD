@@ -1,5 +1,6 @@
-import CustomerName from "@Core/ValueObjects/CustomerName";
 import { expect } from "chai";
+
+import CustomerName from "@Core/ValueObjects/CustomerName";
 
 describe("CustomerName specs", () => {
     context("Create():", () => {

@@ -1,5 +1,6 @@
-import Email from "@Core/ValueObjects/Email";
 import { expect } from "chai";
+
+import Email from "@Core/ValueObjects/Email";
 
 describe("Email specs", () => {
     context("Create():", () => {
