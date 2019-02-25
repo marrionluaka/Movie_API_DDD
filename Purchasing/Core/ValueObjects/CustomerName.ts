@@ -3,12 +3,12 @@ import Result from "@Common/Result";
 export default class CustomerName {
     public readonly Name: string;
 
-    private constructor(value: string){
+    private constructor(value?: string){
         this.Name = value;
     }
 
     public static Create(customerName: string): Result<CustomerName> {
-        if(!customerName || !customerName.trim().length)
+        if(!customerName || !customerName.length)
             return Result.Fail("Customer name cannot be empty");
 
         if(customerName.length > 100)

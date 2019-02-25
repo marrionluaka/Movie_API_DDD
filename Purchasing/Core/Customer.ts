@@ -3,11 +3,11 @@ import Dollars from './ValueObjects/Dollars';
 import CustomerName from './ValueObjects/CustomerName';
 import CustomerStatus from './ValueObjects/CustomerStatus';
 import Email from './ValueObjects/Email';
-import Movie from './Movie';
 import Result from '@Common/Result';
 import ExpirationDate from './ValueObjects/ExpirationDate';
 import CustomerEntity from './Entities/CustomerEntity';
 import { RemoveDays, MoveDateBackward } from '@Common/Utils';
+import Movie from './Entities/MovieEntity';
 
 export default class Customer extends CustomerEntity {
     
@@ -25,7 +25,11 @@ export default class Customer extends CustomerEntity {
 
     public get PurchasedMovies(): ReadonlyArray<PurchasedMovies> {
         return this._PurchasedMovies;
-    };
+    }
+
+    public get StatusExpirationDate(): ExpirationDate {
+        return this._StatusExpirationDate;
+    }
 
     private constructor(customerName?: CustomerName, email?: Email) {
         super();
@@ -34,8 +38,9 @@ export default class Customer extends CustomerEntity {
             this.Name = customerName;
             this._Email = email;
             this._MoneySpent = Dollars.Of(0);
-            this._Status = CustomerStatus.Regular;
+            this._Status = CustomerStatus.Regular();
             this._PurchasedMovies = [];
+            this._StatusExpirationDate = this._Status.ExpirationDate;
         }
     }
 
@@ -46,7 +51,7 @@ export default class Customer extends CustomerEntity {
     }
 
     public HasPurchasedMovie(movie: Movie): boolean {
-        return !!this.PurchasedMovies.some(x => x.Movie == movie && !x.ExpirationDate.IsExpired);
+        return !!this.PurchasedMovies.some(x => x.Movie == movie && !x.ExpirationDate.IsExpired());
     }
 
     public PurchaseMovie(movie: Movie): void {
@@ -70,7 +75,7 @@ export default class Customer extends CustomerEntity {
             return Result.Fail("The customer already has the Advanced status");
 
         if (this.PurchasedMovies.filter((x: PurchasedMovies) => 
-                x.ExpirationDate.Equals(ExpirationDate.Infinite) || 
+                x.ExpirationDate.Equals(ExpirationDate.Infinite()) || 
                 x.ExpirationDate.Date.getTime() >= RemoveDays(30).getTime() 
             ).length < 2)
             return Result.Fail("The customer has to have at least 2 active movies during the last 30 days");
@@ -87,6 +92,6 @@ export default class Customer extends CustomerEntity {
     public Promote(): void {
         if (this.CanPromote().IsFailure) throw "Unable to promote user.";
 
-        this._Status = this._Status.Promote();
+        this._Status = CustomerStatus.Promote();
     }
 }

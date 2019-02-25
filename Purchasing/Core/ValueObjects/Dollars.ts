@@ -8,7 +8,7 @@ export default class Dollars {
         this.Amount = value;
     }
 
-    public get IsZero(): boolean {
+    public IsZero(): boolean {
         return this.Amount == 0;
     }
 

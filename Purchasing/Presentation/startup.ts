@@ -1,8 +1,11 @@
 import { Container, AsyncContainerModule } from 'inversify';
-import { TYPE } from './types';
 import { Repository } from 'typeorm';
-import Customer from '@Core/Customer';
+
+import { TYPE } from './types';
 import { getDbConnection } from './dbConn';
+
+import Movie from '@Core/Entities/MovieEntity';
+import CustomerEntity from '@Core/Entities/CustomerEntity';
 
 class Startup {
     public container: Container;
@@ -15,8 +18,12 @@ class Startup {
         return new AsyncContainerModule(async (bind) => {
             const conn = await getDbConnection();
             
-            bind<Repository<Customer>>(TYPE.CustomerRepo)
-                .toDynamicValue(() => conn.getRepository(Customer))
+            bind<Repository<CustomerEntity>>(TYPE.CustomerRepo)
+                .toDynamicValue(() => conn.getRepository(CustomerEntity))
+                .inRequestScope();
+
+            bind<Repository<Movie>>(TYPE.MovieRepo)
+                .toDynamicValue(() => conn.getRepository(Movie))
                 .inRequestScope();
         });
     }

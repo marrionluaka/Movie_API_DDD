@@ -6,13 +6,14 @@ import {
 } from "typeorm";
 
 import CustomerEntity from "./CustomerEntity";
-import Movie from "@Core/Movie";
+
 import { 
     DollarTransformer, 
     ExpirationDateTransformer 
 } from "@Core/Configurations/CustomerConfiguration";
 import Dollars from "@Core/ValueObjects/Dollars";
 import ExpirationDate from "@Core/ValueObjects/ExpirationDate";
+import Movie from "./MovieEntity";
 
 @Entity("purchased_movies")
 export default abstract class PurchasedMoviesEntity {
@@ -27,6 +28,7 @@ export default abstract class PurchasedMoviesEntity {
 
     @Column({ 
         type: Number, 
+        name: "Price",
         transformer: new DollarTransformer() 
     })
     protected get _Price(): Dollars{
@@ -36,7 +38,7 @@ export default abstract class PurchasedMoviesEntity {
         this._price = price;
     };
 
-    @Column()
+    @Column({ name: "PurchaseDate" })
     protected get _PurchaseDate(): Date{
         return this._purchasedDate;
     };
@@ -46,6 +48,7 @@ export default abstract class PurchasedMoviesEntity {
 
     @Column({ 
         type: Date, 
+        name: "ExpirationDate",
         transformer: new ExpirationDateTransformer() 
     })
     protected get _ExpirationDate(): ExpirationDate{

@@ -8,12 +8,12 @@ export default class ExpirationDate {
         this.Date = date;
     }
 
-    public static get Infinite() : ExpirationDate {
+    public static Infinite() : ExpirationDate {
         return new ExpirationDate(new Date(ExpirationDate.INFINITY_TIMESTAMP));
     }
 
-    public get IsExpired(): boolean {
-        return this !== ExpirationDate.Infinite && this.Date.getTime() < Date.now();
+    public IsExpired(): boolean {
+        return this !== ExpirationDate.Infinite() && this.Date.getTime() < Date.now();
     }
 
     public static Create(date: Date): Result<ExpirationDate> {
@@ -21,6 +21,6 @@ export default class ExpirationDate {
     }
 
     public Equals(other: ExpirationDate): boolean {
-        return this.Date.getTime() == other.Date.getTime();
+        return this.Date.getTime() === other.Date.getTime();
     }
 }

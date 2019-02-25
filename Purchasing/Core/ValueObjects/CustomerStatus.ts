@@ -11,19 +11,19 @@ export default class CustomerStatus {
         this.ExpirationDate = expirationDate;
     }
 
-    public static get Regular(): CustomerStatus {
-        return new CustomerStatus(CustomerStatusType.Regular, ExpirationDate.Infinite);
+    public static Regular(): CustomerStatus {
+        return new CustomerStatus(CustomerStatusType.Regular, ExpirationDate.Infinite());
     }
 
-    public get GetDiscount(): number {
+    public GetDiscount(): number {
         return this.IsAdvanced ? 0.25 : 0;
     }
 
-    public get IsAdvanced(): boolean {
-        return this.Type === CustomerStatusType.Advanced && !this.ExpirationDate.IsExpired;
+    public IsAdvanced(): boolean {
+        return this.Type === CustomerStatusType.Advanced && !this.ExpirationDate.IsExpired();
     }
 
-    public Promote(): CustomerStatus {
+    public static Promote(): CustomerStatus {
         return new CustomerStatus(
             CustomerStatusType.Advanced, 
             ExpirationDate.Create(MoveDateForward(1)).Value

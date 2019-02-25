@@ -1,8 +1,8 @@
 import Customer from './Customer';
-import Movie from './Movie';
 import Dollars from './ValueObjects/Dollars';
 import ExpirationDate from './ValueObjects/ExpirationDate';
 import PurchasedMoviesEntity from './Entities/PurchasedMoviesEntity';
+import Movie from './Entities/MovieEntity';
 
 export default class PurchasedMovies extends PurchasedMoviesEntity {
     
@@ -51,7 +51,7 @@ export default class PurchasedMovies extends PurchasedMoviesEntity {
     ): PurchasedMovies {
         if (!price || price.IsZero)
             throw `Invalid argument: price.`;
-        if (!expirationDate || expirationDate.IsExpired)
+        if (!expirationDate || expirationDate.IsExpired())
             throw `Invalid argument: expirationDate.`;
         if (!movie)
             throw `Invalid argument: movie.`;

@@ -8,7 +8,7 @@ export default class Email {
     }
 
     public static Create(email: string): Result<Email> {
-        if(!email || !email.trim().length)
+        if(!email || !email.length)
             return Result.Fail("The provided email cannot be empty");
 
         if(!email.match(/\S+@\S+\.\S+/))

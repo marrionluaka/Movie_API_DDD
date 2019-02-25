@@ -10,18 +10,25 @@ import {
 import { Repository } from 'typeorm';
 
 import { TYPE } from '../types';
-import Customer from '@Core/Customer';
+
+import Movie from '@Core/Entities/MovieEntity';
+import CustomerEntity from '@Core/Entities/CustomerEntity';
 
 @controller("/api/customer")
 export class CustomersController implements interfaces.Controller{
-    private readonly _customerRepo: Repository<Customer>;
+    private readonly _customerRepo: Repository<CustomerEntity>;
+    private readonly _movieRepo: Repository<Movie>
 
-    public constructor( @inject(TYPE.CustomerRepo) customerRepo: Repository<Customer>) {
+    public constructor(
+        @inject(TYPE.CustomerRepo) customerRepo: Repository<CustomerEntity>,
+        @inject(TYPE.MovieRepo) movieRepo: Repository<Movie>
+    ) {
         this._customerRepo = customerRepo;
+        this._movieRepo = movieRepo;
     }
 
     @httpGet("/")
-    public async Get(req: Request, @response() res: Response): Promise<Customer> {
+    public async Get(req: Request, @response() res: Response): Promise<CustomerEntity> {
         return await this._customerRepo.findOne(1);
     }
 }

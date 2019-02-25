@@ -7,7 +7,9 @@ import {
 import { 
     CustomerNameTransformer, 
     EmailTransformer, 
-    DollarTransformer 
+    DollarTransformer, 
+    CustomerStatusTransformer,
+    ExpirationDateTransformer
 } from "@Core/Configurations/CustomerConfiguration";
 import CustomerName from "@Core/ValueObjects/CustomerName";
 import Email from "@Core/ValueObjects/Email";
@@ -15,11 +17,13 @@ import CustomerStatus from "@Core/ValueObjects/CustomerStatus";
 import Dollars from "@Core/ValueObjects/Dollars";
 import PurchasedMoviesEntity from "./PurchasedMoviesEntity";
 import PurchasedMovies from "@Core/PurchasedMovie";
+import ExpirationDate from "@Core/ValueObjects/ExpirationDate";
 
 @Entity("customer")
 export default abstract class CustomerEntity {
     protected _email: Email;
     protected _status: CustomerStatus;
+    protected _statusExpirationDate: ExpirationDate;
     protected _moneySpent: Dollars;
     protected _purchasedMovies: PurchasedMovies[];
 
@@ -35,6 +39,7 @@ export default abstract class CustomerEntity {
     @Column({
         type: String,
         unique: true,
+        name: "Email",
         transformer: new EmailTransformer()
     })
     protected get _Email(): Email{
@@ -44,10 +49,10 @@ export default abstract class CustomerEntity {
         this._email = email;
     };
 
-    @Column({
-        type: "enum",
-        enum: CustomerStatus,
-        default: CustomerStatus.Regular
+    @Column({ 
+        type: Number, 
+        name: "Status",
+        transformer: new CustomerStatusTransformer() 
     })
     protected get _Status(): CustomerStatus{
         return this._status;
@@ -56,11 +61,21 @@ export default abstract class CustomerEntity {
         this._status = status;
     };
 
-    @Column()
-    StatusExpirationDate: Date;
+    @Column({ 
+        type: Date, 
+        name: "StatusExpirationDate",
+        transformer: new ExpirationDateTransformer() 
+    })
+    protected get _StatusExpirationDate(): ExpirationDate{
+        return this._statusExpirationDate;
+    };
+    protected set _StatusExpirationDate(statusExpirationDate: ExpirationDate){
+        this._statusExpirationDate = statusExpirationDate;
+    };
 
     @Column({ 
         type: Number, 
+        name: "MoneySpent",
         transformer: new DollarTransformer() 
     })
     protected get _MoneySpent(): Dollars{
