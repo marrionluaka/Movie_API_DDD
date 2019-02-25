@@ -49,7 +49,7 @@ export default class PurchasedMovies extends PurchasedMoviesEntity {
         movie: Movie,
         customer: Customer,
     ): PurchasedMovies {
-        if (!price || price.IsZero)
+        if (!price || price.IsZero())
             throw `Invalid argument: price.`;
         if (!expirationDate || expirationDate.IsExpired())
             throw `Invalid argument: expirationDate.`;

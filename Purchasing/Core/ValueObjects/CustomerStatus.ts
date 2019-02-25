@@ -16,7 +16,7 @@ export default class CustomerStatus {
     }
 
     public GetDiscount(): number {
-        return this.IsAdvanced ? 0.25 : 0;
+        return this.IsAdvanced() ? 0.25 : 0;
     }
 
     public IsAdvanced(): boolean {

@@ -14,7 +14,7 @@ describe("Movie specs", () => {
 
     context("LifeLongMovie specs", () => {
         it("GetExpirationDate(): returns a never expiring date.", () => {
-            expect(new LifeLongMovie().GetExpirationDate()).to.eql(ExpirationDate.Infinite);
+            expect(new LifeLongMovie().GetExpirationDate()).to.eql(ExpirationDate.Infinite());
         });
 
         it("GetBasePrice(): returns 8 dollars.", () => {

@@ -58,7 +58,7 @@ export default class Customer extends CustomerEntity {
         if (this.HasPurchasedMovie(movie)) throw "You have already purchased this movie.";
 
         const price = movie.CalculatePrice(this.Status);
-
+        
         const purchasedMovie = PurchasedMovies.Create(
             price, 
             movie.GetExpirationDate(),
@@ -71,7 +71,8 @@ export default class Customer extends CustomerEntity {
     }
 
     public CanPromote(): Result<Customer> {
-        if (this.Status.IsAdvanced)
+        
+        if (this.Status.IsAdvanced())
             return Result.Fail("The customer already has the Advanced status");
 
         if (this.PurchasedMovies.filter((x: PurchasedMovies) => 

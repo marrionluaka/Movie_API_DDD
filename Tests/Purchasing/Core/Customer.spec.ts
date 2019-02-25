@@ -36,7 +36,7 @@ describe("Customer specs", () => {
             expect(customer.Name.Name).to.equal("Cristiano Ronaldo");
             expect(customer.Email.Address).to.equal("nobody@nowhere.com");
             expect(customer.MoneySpent.Amount).to.equal(0);
-            expect(customer.Status).to.eql(CustomerStatus.Regular);
+            expect(customer.Status).to.eql(CustomerStatus.Regular());
         });
     });
 
@@ -118,13 +118,13 @@ describe("Customer specs", () => {
 
             customer.Promote();
 
-            expect(customer.Status.IsAdvanced).to.be.true;
+            expect(customer.Status.IsAdvanced()).to.be.true;
         });
     });
 });
 
 function _spendOneHundredDollarsOnMovies(customer: Customer): void{
-    Array(13).fill(null).map((_: any, i: any) => {
+    Array(17).fill(null).map((_: any, i: any) => {
         customer.PurchaseMovie(new LifeLongMovie());
     });
 }
