@@ -13,7 +13,7 @@ import Dollars from '../ValueObjects/Dollars';
 @Entity()
 export default abstract class Movie {
     @PrimaryGeneratedColumn("uuid")
-    MovieId: string;
+    readonly MovieId: string;
 
     @Column()
     Name: string;
@@ -25,7 +25,7 @@ export default abstract class Movie {
     })
     LicensingModel: LicensingModel;
 
-    @OneToMany(type => PurchasedMoviesEntity, ps => ps._PurchasedMovieId)
+    @OneToMany(type => PurchasedMoviesEntity, ps => ps.Movie)
     PurchasedMovies: PurchasedMoviesEntity[];
 
     public CalculatePrice(status: CustomerStatus): Dollars {

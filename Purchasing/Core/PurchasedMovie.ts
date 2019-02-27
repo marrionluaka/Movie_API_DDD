@@ -6,26 +6,6 @@ import Movie from './Entities/MovieEntity';
 
 export default class PurchasedMovies extends PurchasedMoviesEntity {
     
-    public get Price(): Dollars{
-        return this._Price;
-    }
-
-    public get PurchaseDate(): Date{
-        return this._PurchaseDate;
-    }
-
-    public get ExpirationDate(): ExpirationDate{
-        return this._ExpirationDate;
-    }
-
-    public get Customer(): Customer{
-        return this.Customer;
-    }
-
-    public get Movie(): Movie{
-        return this._Movie;
-    }
-    
     private constructor(
         price?: Dollars,
         expirationDate?: ExpirationDate,

@@ -2,7 +2,8 @@ import {
     Entity, 
     PrimaryGeneratedColumn, 
     Column, 
-    OneToMany 
+    OneToMany, 
+    JoinColumn
 } from "typeorm";
 import { 
     CustomerNameTransformer, 
@@ -28,7 +29,7 @@ export default abstract class CustomerEntity {
     protected _purchasedMovies: PurchasedMovies[];
 
     @PrimaryGeneratedColumn("uuid")
-    CustomerId: string;
+    readonly CustomerId: string;
 
     @Column({ 
         type: String, 
@@ -85,11 +86,32 @@ export default abstract class CustomerEntity {
         this._moneySpent = moneySpent;
     };
 
-    @OneToMany(type => PurchasedMoviesEntity, ps => ps._PurchasedMovieId)
-    protected get _PurchasedMovies(): PurchasedMovies[]{
+    @OneToMany(type => PurchasedMoviesEntity, ps => ps.Customer, { cascade: true })
+    protected get _PurchasedMovies(): PurchasedMoviesEntity[]{
         return this._purchasedMovies;
     };
-    protected set _PurchasedMovies(moneySpent: PurchasedMovies[]){
-        this._purchasedMovies = moneySpent;
+    protected set _PurchasedMovies(purchasedMovies: PurchasedMoviesEntity[]){
+        this._purchasedMovies = purchasedMovies;
     };
+    
+
+    public get Status(): CustomerStatus {
+        return this._Status;
+    }
+
+    public get MoneySpent(): Dollars {
+        return this._MoneySpent;
+    }
+
+    public get Email(): Email {
+        return this._Email;
+    }
+
+    public get PurchasedMovies(): ReadonlyArray<PurchasedMovies> {
+        return this._PurchasedMovies || [];
+    }
+
+    public get StatusExpirationDate(): ExpirationDate {
+        return this._StatusExpirationDate;
+    }
 }

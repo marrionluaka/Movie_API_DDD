@@ -10,26 +10,6 @@ import { RemoveDays, MoveDateBackward } from '@Common/Utils';
 import Movie from './Entities/MovieEntity';
 
 export default class Customer extends CustomerEntity {
-    
-    public get Status(): CustomerStatus {
-        return this._Status;
-    }
-
-    public get MoneySpent(): Dollars {
-        return this._MoneySpent;
-    }
-
-    public get Email(): Email {
-        return this._Email;
-    }
-
-    public get PurchasedMovies(): ReadonlyArray<PurchasedMovies> {
-        return this._PurchasedMovies;
-    }
-
-    public get StatusExpirationDate(): ExpirationDate {
-        return this._StatusExpirationDate;
-    }
 
     private constructor(customerName?: CustomerName, email?: Email) {
         super();

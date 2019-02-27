@@ -2,7 +2,8 @@ import {
     Entity, 
     PrimaryGeneratedColumn, 
     Column, 
-    ManyToOne 
+    ManyToOne, 
+    JoinColumn
 } from "typeorm";
 
 import CustomerEntity from "./CustomerEntity";
@@ -14,6 +15,7 @@ import {
 import Dollars from "@Core/ValueObjects/Dollars";
 import ExpirationDate from "@Core/ValueObjects/ExpirationDate";
 import Movie from "./MovieEntity";
+import Customer from "@Core/Customer";
 
 @Entity("purchased_movies")
 export default abstract class PurchasedMoviesEntity {
@@ -24,7 +26,7 @@ export default abstract class PurchasedMoviesEntity {
     protected _movie: Movie;
 
     @PrimaryGeneratedColumn("uuid")
-    readonly _PurchasedMovieId: string;
+    readonly PurchasedMovieId: string;
 
     @Column({ 
         type: Number, 
@@ -58,7 +60,8 @@ export default abstract class PurchasedMoviesEntity {
         this._expirationDate = expirationDate;
     };
 
-    @ManyToOne(type => CustomerEntity, c => c.CustomerId)
+    @ManyToOne(type => CustomerEntity, c => c.PurchasedMovies)
+    @JoinColumn()
     protected get _Customer(): CustomerEntity{
         return this._customer;
     };
@@ -66,11 +69,33 @@ export default abstract class PurchasedMoviesEntity {
         this._customer = customer;
     };
 
-    @ManyToOne(type => Movie, m => m.MovieId)
+    @ManyToOne(type => Movie, m => m.PurchasedMovies)
+    @JoinColumn()
     protected get _Movie(): Movie{
         return this._movie;
     };
     protected set _Movie(movie: Movie){
         this._movie = movie;
     };
+    
+    
+    public get Price(): Dollars{
+        return this._Price;
+    }
+
+    public get PurchaseDate(): Date{
+        return this._PurchaseDate;
+    }
+
+    public get ExpirationDate(): ExpirationDate{
+        return this._ExpirationDate;
+    }
+
+    public get Customer(): CustomerEntity{
+        return this.Customer;
+    }
+
+    public get Movie(): Movie{
+        return this._Movie;
+    }
 }
