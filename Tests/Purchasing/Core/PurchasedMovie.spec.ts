@@ -1,11 +1,11 @@
 import { expect } from "chai";
 
-import PurchasedMovie from "@Core/PurchasedMovie";
+import PurchasedMovie from "@Core/Entities/PurchasedMoviesEntity";
 import Dollars from "@Core/ValueObjects/Dollars";
 import ExpirationDate from "@Core/ValueObjects/ExpirationDate";
 import { MoveDateBackward, MoveDateForward } from "@Common/Utils";
 import { TwoDaysMovie } from "@Core/Movie";
-import Customer from "@Core/Customer";
+import Customer from "@Core/Entities/CustomerEntity";
 import CustomerName from "@Core/ValueObjects/CustomerName";
 import Email from "@Core/ValueObjects/Email";
 

@@ -1,6 +1,6 @@
 import { expect } from "chai";
 
-import Customer from "@Core/Customer";
+import Customer from "@Core/Entities/CustomerEntity";
 import CustomerName from "@Core/ValueObjects/CustomerName";
 import Email from "@Core/ValueObjects/Email";
 import CustomerStatus from "@Core/ValueObjects/CustomerStatus";
@@ -125,6 +125,7 @@ describe("Customer specs", () => {
 
 function _spendOneHundredDollarsOnMovies(customer: Customer): void{
     Array(17).fill(null).map((_: any, i: any) => {
-        customer.PurchaseMovie(new LifeLongMovie());
+        const movie = new LifeLongMovie();
+        customer.PurchaseMovie(movie);
     });
 }

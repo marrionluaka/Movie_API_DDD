@@ -1,12 +1,12 @@
 import { 
     Entity, 
-    PrimaryGeneratedColumn, 
     Column, 
     ManyToOne, 
-    JoinColumn
+    JoinColumn,
+    PrimaryColumn
 } from "typeorm";
 
-import CustomerEntity from "./CustomerEntity";
+import CustomerEntity from "@Core/Entities/CustomerEntity";
 
 import { 
     DollarTransformer, 
@@ -15,87 +15,87 @@ import {
 import Dollars from "@Core/ValueObjects/Dollars";
 import ExpirationDate from "@Core/ValueObjects/ExpirationDate";
 import Movie from "./MovieEntity";
-import Customer from "@Core/Customer";
+import { ValidateKey } from '@Core/Decorators/ValidateKey';
+import { GenerateGuid } from "@Common/Utils";
 
 @Entity("purchased_movies")
-export default abstract class PurchasedMoviesEntity {
-    protected _price: Dollars;
-    protected _purchasedDate: Date;
-    protected _expirationDate: ExpirationDate;
-    protected _customer: CustomerEntity;
-    protected _movie: Movie;
+export default class PurchasedMoviesEntity {
+    private _purchasedDate: Date;
+    private _customer: CustomerEntity;
+    private _movie: Movie;
 
-    @PrimaryGeneratedColumn("uuid")
-    readonly PurchasedMovieId: string;
+    @PrimaryColumn({ 
+        type: String,
+        name: "purchased_movie_id"
+    })
+    public readonly PurchasedMovieId: string
 
     @Column({ 
         type: Number, 
-        name: "Price",
+        name: "price",
         transformer: new DollarTransformer() 
     })
-    protected get _Price(): Dollars{
-        return this._price;
-    };
-    protected set _Price(price: Dollars){
-        this._price = price;
-    };
+    public Price: Dollars
 
-    @Column({ name: "PurchaseDate" })
-    protected get _PurchaseDate(): Date{
+    @ValidateKey('_purchasedDate')
+    @Column({ name: "purchase_date" })
+    public get PurchasedDate(): Date {
         return this._purchasedDate;
-    };
-    protected set _PurchaseDate(purchasedDate: Date){
-        this._purchasedDate = purchasedDate;
-    };
+    }
 
     @Column({ 
         type: Date, 
-        name: "ExpirationDate",
+        name: "expirationDate",
         transformer: new ExpirationDateTransformer() 
     })
-    protected get _ExpirationDate(): ExpirationDate{
-        return this._expirationDate;
-    };
-    protected set _ExpirationDate(expirationDate: ExpirationDate){
-        this._expirationDate = expirationDate;
-    };
+    public ExpirationDate: ExpirationDate
 
+    @ValidateKey('_customer')
     @ManyToOne(type => CustomerEntity, c => c.PurchasedMovies)
-    @JoinColumn()
-    protected get _Customer(): CustomerEntity{
+    @JoinColumn({ name: "customer_id" })
+    public get Customer(): CustomerEntity {
         return this._customer;
-    };
-    protected set _Customer(customer: CustomerEntity){
-        this._customer = customer;
-    };
+    }
 
+    @ValidateKey('_movie')
     @ManyToOne(type => Movie, m => m.PurchasedMovies)
-    @JoinColumn()
-    protected get _Movie(): Movie{
+    @JoinColumn({ name: "movie_id" })
+    public get Movie(): Movie {
         return this._movie;
-    };
-    protected set _Movie(movie: Movie){
-        this._movie = movie;
-    };
-    
-    
-    public get Price(): Dollars{
-        return this._Price;
     }
 
-    public get PurchaseDate(): Date{
-        return this._PurchaseDate;
+
+    private constructor(
+        price?: Dollars,
+        expirationDate?: ExpirationDate,
+        movie?: Movie,
+        customer?: CustomerEntity
+    ){   
+        if(!!movie){
+            this.PurchasedMovieId = GenerateGuid();
+            this.Price = price;
+            this.ExpirationDate = expirationDate;
+            this._movie = movie;
+            this._customer = customer;
+            this._purchasedDate = new Date();
+        }
     }
 
-    public get ExpirationDate(): ExpirationDate{
-        return this._ExpirationDate;
-    }
+    public static Create(
+        price: Dollars,
+        expirationDate: ExpirationDate,
+        movie: Movie,
+        customer: CustomerEntity,
+    ): PurchasedMoviesEntity {
+        if (!price || price.IsZero())
+            throw `Invalid argument: price.`;
+        if (!expirationDate || expirationDate.IsExpired())
+            throw `Invalid argument: expirationDate.`;
+        if (!movie)
+            throw `Invalid argument: movie.`;
+        if (!customer)
+            throw `Invalid argument: customer.`;
 
-    public get Customer(): CustomerEntity{
-        return this.Customer;
-    }
-
-    public get Movie(): Movie{
-        return this._Movie;
+        return new PurchasedMoviesEntity(price, expirationDate, movie, customer);
     }
 }
