@@ -4,6 +4,7 @@ import {
     interfaces, 
     controller, 
     httpGet,
+    httpPost,
     requestParam,
     response
 } from "inversify-express-utils";
@@ -14,6 +15,8 @@ import CustomerEntity from '@Core/Entities/CustomerEntity';
 
 import { TYPE } from '../types';
 import CustomerDto from '../Models/CustomerDto';
+import CustomerName from '@Core/ValueObjects/CustomerName';
+import Email from '@Core/ValueObjects/Email';
 
 @controller("/api/customer")
 export class CustomersController implements interfaces.Controller{
@@ -50,6 +53,35 @@ export class CustomersController implements interfaces.Controller{
             this.errorHandler(res);
             console.log(ex);
         }
+    }
+
+    @httpPost("/")
+    public async Create(req: Request, res: Response) {
+        const { name, email } = req.body;
+
+        const customerNameOrError = CustomerName.Create(name);
+        const emailOrError = Email.Create(email);
+
+        if([customerNameOrError, emailOrError].some(r => r.IsFailure))
+            return res.status(400).json({
+                error: 'Bad Request: Invalid email or name provided'
+            })
+
+        const emaiExists = await this._customerRepo.query("SELECT email FROM customer WHERE customer.email = $1", [email]);
+
+        if(emaiExists.length)
+            return res.status(400).json({
+                error: `Bad Request: The email ${email} already exists`
+            })
+
+        await this._customerRepo.insert(CustomerEntity.Create(
+            customerNameOrError.Value,
+            emailOrError.Value
+        ));
+
+        res.status(200).json({
+            success: 'Customer successfully added!'
+        });
     }
 
     private errorHandler(res: Response, msg?: string){
