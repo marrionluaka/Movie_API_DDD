@@ -24,7 +24,6 @@ import { RemoveDays, MoveDateBackward, GenerateGuid } from "@Common/Utils";
 
 @Entity("customer")
 export default class CustomerEntity {
-    private _status: CustomerStatus;
     private _statusExpirationDate: ExpirationDate;
 
     @PrimaryColumn({ 

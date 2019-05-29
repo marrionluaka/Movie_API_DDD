@@ -32,9 +32,36 @@ export class CustomersController implements interfaces.Controller{
         this._movieRepo = movieRepo;
     }
 
+    @httpGet('/')
+    public async GetList(_: Request, res: Response): Promise<void> {
+        try {
+            const customers = await this._customerRepo.find();
+
+            if(!customers.length) 
+                return this.errorHandler(res, "No customers were found.");
+
+            res.status(200).json({
+                customers:customers.map(c => {
+                    return {
+                        id: c.CustomerId,
+                        name: c.Name.Name,
+                        email: c.Email.Address,
+                        moneySpent: c.MoneySpent.Amount,
+                        status: c.Status.Type,
+                        statusExpirationDate: c.Status.ExpirationDate.Date
+                    };
+                })
+            });
+
+        } catch(e) {
+            this.errorHandler(res);
+            console.log(e);
+        }
+    } 
+
     @httpGet("/:id")
     public async Get(@requestParam("id") id: string, @response() res: Response): Promise<void> {
-        try{
+        try {
             let customer = await this._customerRepo.findOne({ 
                 where: { CustomerId: id }, 
                 relations: ['PurchasedMovies', 'PurchasedMovies.Movie'] 
@@ -49,14 +76,14 @@ export class CustomersController implements interfaces.Controller{
                 customer: customerDto
             });
 
-        } catch (ex){
+        } catch (ex) {
             this.errorHandler(res);
             console.log(ex);
         }
     }
 
     @httpPost("/")
-    public async Create(req: Request, res: Response) {
+    public async Create(req: Request, res: Response): Promise<Response> {
         const { name, email } = req.body;
 
         const customerNameOrError = CustomerName.Create(name);
