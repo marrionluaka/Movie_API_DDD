@@ -94,9 +94,9 @@ export class CustomersController implements interfaces.Controller{
                 error: 'Bad Request: Invalid email or name provided'
             })
 
-        const emaiExists = await this._customerRepo.query("SELECT email FROM customer WHERE customer.email = $1", [email]);
+        const emailExists = await this._customerRepo.query("SELECT email FROM customer WHERE customer.email = $1", [email]);
 
-        if(emaiExists.length)
+        if(emailExists.length)
             return res.status(400).json({
                 error: `Bad Request: The email ${email} already exists`
             })
@@ -109,6 +109,27 @@ export class CustomersController implements interfaces.Controller{
         res.status(200).json({
             success: 'Customer successfully added!'
         });
+    }
+
+    @httpPost("/update/:id")
+    public async Update(@requestParam("id") id: string, req: Request, res: Response): Promise<void | Response> {
+        const { name } = req.body;
+
+        const customerNameOrError = CustomerName.Create(name);
+
+        if (customerNameOrError.IsFailure)
+            return res.status(400).json({
+                error: 'Bad Request: Invalid name provided'
+            });
+        
+        await this._customerRepo
+            .createQueryBuilder()
+            .update(CustomerEntity)
+            .set({ Name: customerNameOrError.Value })
+            .where("customer_id = :id", { id })
+            .execute();
+        
+        res.status(200).json({ success: 'cool story bruh!' });
     }
 
     private errorHandler(res: Response, msg?: string){
