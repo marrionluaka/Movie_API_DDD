@@ -129,7 +129,7 @@ export class CustomersController implements interfaces.Controller{
             .where("customer_id = :id", { id })
             .execute();
         
-        res.status(200).json({ success: 'cool story bruh!' });
+        res.status(200).json({ success: 'Customer successfully updated!' });
     }
 
     private errorHandler(res: Response, msg?: string){
