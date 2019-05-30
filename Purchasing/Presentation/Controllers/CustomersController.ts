@@ -62,10 +62,7 @@ export class CustomersController implements interfaces.Controller{
     @httpGet("/:id")
     public async Get(@requestParam("id") id: string, @response() res: Response): Promise<void> {
         try {
-            let customer = await this._customerRepo.findOne({ 
-                where: { CustomerId: id }, 
-                relations: ['PurchasedMovies', 'PurchasedMovies.Movie'] 
-            });
+            let customer = await this.findCustomerById(id);
             
             if(!customer) 
                 return this.errorHandler(res, "Customer not found.");
@@ -122,12 +119,8 @@ export class CustomersController implements interfaces.Controller{
                 error: 'Bad Request: Invalid name provided'
             });
 
-        await this._customerRepo
-            .createQueryBuilder()
-            .update(CustomerEntity)
-            .set({ Name: customerNameOrError.Value })
-            .where("customer_id = :id", { id })
-            .execute();
+        const customer = await this.findCustomerById(id);
+        await this.do(() => customer.Name = customerNameOrError.Value, customer);
 
         res.status(200).json({ success: 'Customer successfully updated!' });
     }
@@ -147,10 +140,7 @@ export class CustomersController implements interfaces.Controller{
                 error: 'Bad Request: Invalid movie id provided'
             });
         
-        const customer = await this._customerRepo.findOne({ 
-            where: { CustomerId: id },
-            relations: ['PurchasedMovies', 'PurchasedMovies.Movie']
-        });
+        const customer = await this.findCustomerById(id);
 
         if (!customer)
             return res.status(400).json({
@@ -162,11 +152,45 @@ export class CustomersController implements interfaces.Controller{
                 error: `Bad Request: Customer has already purchased ${movie.Name}`
             });
         
-        customer.PurchaseMovie(movie);
-        await this._customerRepo.save(customer);
+        await this.do(() => customer.PurchaseMovie(movie), customer);
+    }
+
+    @httpPost("/:id/promote")
+    public async PromoteCustomer(
+        @requestParam("id") id: string, 
+        req: Request,
+        res: Response
+    ): Promise<void | Response> {
+        const customer = await this.findCustomerById(id);
+
+        if (!customer)
+            return res.status(400).json({
+                error: 'Bad Request: Invalid customer id provided'
+            });
+        
+        if (customer.CanPromote().IsFailure)
+            return res.status(400).json({
+                error: 'Bad Request: Customer cannot be promoted'
+            });
+        
+        await this.do(() => customer.Promote(), customer);
+
+        res.status(200).json({ success: 'Customer successfully promoted!' });
     }
 
     private errorHandler(res: Response, msg?: string){
         res.status(400).json({ error: msg || this._errorMessage });
+    }
+
+    private async findCustomerById(id: string): Promise<CustomerEntity> {
+        return await this._customerRepo.findOne({ 
+            where: { CustomerId: id },
+            relations: ['PurchasedMovies', 'PurchasedMovies.Movie']
+        });
+    }
+
+    private async do(action: (repo: Repository<CustomerEntity>) => void, customer :CustomerEntity) {
+        action(this._customerRepo)
+        await this._customerRepo.save(customer);
     }
 }
