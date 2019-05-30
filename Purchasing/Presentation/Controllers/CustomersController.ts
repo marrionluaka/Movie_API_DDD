@@ -121,15 +121,49 @@ export class CustomersController implements interfaces.Controller{
             return res.status(400).json({
                 error: 'Bad Request: Invalid name provided'
             });
-        
+
         await this._customerRepo
             .createQueryBuilder()
             .update(CustomerEntity)
             .set({ Name: customerNameOrError.Value })
             .where("customer_id = :id", { id })
             .execute();
-        
+
         res.status(200).json({ success: 'Customer successfully updated!' });
+    }
+
+    @httpPost("/:id/movies")
+    public async PurchaseMovie(
+        @requestParam("id") id: string, 
+        req: Request,
+        res: Response
+    ): Promise<void | Response> {
+        const { movieId } = req.body
+
+        const movie = await this._movieRepo.findOne({ where: { MovieId: movieId } });
+
+        if (!movie)
+            return res.status(400).json({
+                error: 'Bad Request: Invalid movie id provided'
+            });
+        
+        const customer = await this._customerRepo.findOne({ 
+            where: { CustomerId: id },
+            relations: ['PurchasedMovies', 'PurchasedMovies.Movie']
+        });
+
+        if (!customer)
+            return res.status(400).json({
+                error: 'Bad Request: Invalid customer id provided'
+            });
+        
+        if (customer.HasPurchasedMovie(movie))
+            return res.status(400).json({
+                error: `Bad Request: Customer has already purchased ${movie.Name}`
+            });
+        
+        customer.PurchaseMovie(movie);
+        await this._customerRepo.save(customer);
     }
 
     private errorHandler(res: Response, msg?: string){
