@@ -109,7 +109,11 @@ export class CustomersController implements interfaces.Controller{
     }
 
     @httpPost("/update/:id")
-    public async Update(@requestParam("id") id: string, req: Request, res: Response): Promise<void | Response> {
+    public async Update(
+        @requestParam("id") id: string, 
+        req: Request, 
+        res: Response
+    ): Promise<void | Response> {
         const { name } = req.body;
 
         const customerNameOrError = CustomerName.Create(name);
