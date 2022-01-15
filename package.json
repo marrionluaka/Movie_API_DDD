@@ -34,7 +34,7 @@
     "mocha": "5.2.0",
     "nodemon": "1.18.7",
     "ramda": "^0.26.1",
-    "shelljs": "0.8.3",
+    "shelljs": "0.8.5",
     "sinon": "7.2.2",
     "ts-nameof": "^3.0.1",
     "ts-node": "7.0.0",
